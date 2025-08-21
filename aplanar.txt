@@ -1,0 +1,4 @@
+name = name,tipo_car=[],color="",num_puertas=0,tipo_combustible=[]
+
+
+name ,tipo_car,color,num_puertas,tipo_combustible
