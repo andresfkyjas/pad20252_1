@@ -27,13 +27,21 @@ jobs:
         run: pip install --upgrade pip
       - name: Paso 6 - instalar dependencias
         run: pip install -e .
-      - name: Paso 7 - Ejecutar Script de main
-        run: python prueba.py
+      - name: Paso 7 - Ejecutar Script entregable_uno
+        run: python entregable_uno.py
+      - name: Paso 8 - Validar resultados (debe decir 'Validación: OK')
+        run: |
+          $out = python validador_simple.py
+          Write-Host $out
+          if ($out -notmatch 'Validación: OK') {
+            throw "El validador no pasó. Revisa datos_out.txt y grafico_out.jpg."
+          }
+        shell: pwsh
 
       - name: Commit and Push changes
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          commit_message: Holan mundo action
+          commit_message: "ntregable uno: genera y valida datos_out.txt y grafico_out.jpg"
           commit_user_name: Andres Callejas [GitHub Actions]
           commit_user_email: andres.callejas@iudigital.edu.co
           commit_author: Andres Callejas <andres.callejas@iudigital.edu.co>
