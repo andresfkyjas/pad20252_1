@@ -25,15 +25,13 @@ jobs:
 
       - name: Paso 4 - Instalar dependencias mínimas
         run: |
-          # Si tu script genera la imagen con matplotlib, instálalo:
           python -m pip install matplotlib
-          # Si tienes setup.py/pyproject en el repo y necesitas instalarte:
+          # Si tienes paquete propio:
           # python -m pip install -e .
         shell: pwsh
 
       - name: Paso 5 - Ejecutar entregable_uno.py
         run: |
-          # Asegura datos_in.txt por si no está presente en el repo
           if (-not (Test-Path -Path "datos_in.txt")) {
             "40 98725654 645564564" | Out-File -Encoding utf8 datos_in.txt
           }
@@ -53,6 +51,6 @@ jobs:
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: "Entregable uno: genera y valida datos_out.txt y grafico_out.jpg"
-          commit_user_name: Andres Callejas [GitHub Actions]
-          commit_user_email: andres.callejas@iudigital.edu.co
-          commit_author: Andres Callejas <andres.callejas@iudigital.edu.co>
+          commit_user_name: "Andres Callejas [GitHub Actions]"
+          commit_user_email: "andres.callejas@iudigital.edu.co"
+          commit_author: "Andres Callejas <andres.callejas@iudigital.edu.co>"
