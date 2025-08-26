@@ -2,55 +2,55 @@ name: Entregables
 
 on:
   push:
-    branches: [ main ]
+    branches: [ "main" ]
 
 jobs:
   build:
     runs-on: windows-latest
-    permissions:
-      contents: write
 
     steps:
-      - name: Paso 1 - Checkout repo
+      - name: Step 1 - Checkout
         uses: actions/checkout@v4
 
-      - name: Paso 2 - Setup Python
+      - name: Step 2 - Setup Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.9.2'
+          python-version: "3.9.2"
 
-      - name: Paso 3 - Actualizar pip
+      - name: Step 3 - Upgrade pip
         run: python -m pip install --upgrade pip
         shell: pwsh
 
-      - name: Paso 4 - Instalar dependencias mínimas
+      - name: Step 4 - Install deps
         run: |
           python -m pip install matplotlib
-          # Si tienes paquete propio:
-          # python -m pip install -e .
         shell: pwsh
 
-      - name: Paso 5 - Ejecutar entregable_uno.py
+      - name: Step 5 - Ensure input file
         run: |
           if (-not (Test-Path -Path "datos_in.txt")) {
             "40 98725654 645564564" | Out-File -Encoding utf8 datos_in.txt
           }
-          python entregable_uno.py
         shell: pwsh
 
-      - name: Paso 6 - Validar resultados (debe decir 'Validación: OK')
+      - name: Step 6 - Run entregable_uno.py
+        run: python entregable_uno.py
+        shell: pwsh
+
+      - name: Step 7 - Validate
         run: |
           $out = python validador_uno.py
           Write-Host $out
-          if ($out -notmatch 'Validación: OK') {
-            throw "El validador no pasó. Revisa datos_out.txt y grafico_out.jpg."
+          if ($out -notmatch "Validación: OK") {
+            throw "Validator failed"
           }
         shell: pwsh
 
-      - name: Paso 7 - Commit and Push changes (si hubo archivos generados)
+      - name: Step 8 - Auto-commit artifacts
+        if: success()
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          commit_message: "Entregable uno: genera y valida datos_out.txt y grafico_out.jpg"
+          commit_message: "CI: generate and validate datos_out.txt and grafico_out.jpg"
           commit_user_name: "Andres Callejas [GitHub Actions]"
           commit_user_email: "andres.callejas@iudigital.edu.co"
           commit_author: "Andres Callejas <andres.callejas@iudigital.edu.co>"
