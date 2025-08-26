@@ -30,8 +30,7 @@ jobs:
       - name: Paso 7 - Ejecutar Script entregable_uno
         run: python entregable_uno.py
       - name: Paso 8 - Validar resultados (debe decir 'Validación: OK')
-        run: |
-          $out = python validador_uno.py
+        run: $out = python validador_uno.py
           Write-Host $out
           if ($out -notmatch 'Validación: OK') {
             throw "El validador no pasó. Revisa datos_out.txt y grafico_out.jpg."
