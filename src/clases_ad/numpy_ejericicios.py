@@ -51,3 +51,20 @@ class NumpyEjercicios:
     def inspeccionar_dtype(self, datos):
         self._validar_datos(datos)
         return self._mostrar_entrada_salida(datos, datos.dtype)
+
+# arreglos y/o matrices aritmetica suma , multiplicacion, raiz, logaritmo
+    def suma_array(self, datos, valor = 0):
+        self._validar_datos(datos)
+        return self._mostrar_entrada_salida(datos, datos + valor)
+
+    def multiplicacion_elemento(self, datos, valor = 0):
+        self._validar_datos(datos)
+        return self._mostrar_entrada_salida(datos, datos * valor)
+
+    def raiz_cuadrada(self, datos):
+        self._validar_datos(datos)
+        return self._mostrar_entrada_salida(datos, np.sqrt(np.abs(datos)))
+
+    def logaritmo_natural(self, datos):
+        self._validar_datos(datos)
+        return self._mostrar_entrada_salida(datos, np.log1p(np.abs(datos)))
