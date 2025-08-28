@@ -54,6 +54,10 @@ class ProcesadorDatos:
 
     # 2) Generar datos y guardarlos
     def generar_datos(self):
+        """
+        generar los datos i hasta n,
+        b,c, y guardar en un archivo datos_out.txt
+        """
         if self.n is None or self.cc_uno is None or self.cc_dos is None:
             raise RuntimeError("Primero ejecute leer_datos_entrada()")
 
