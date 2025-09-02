@@ -64,6 +64,37 @@ class ProcesadorDatos:
         rng_b = random.Random(self.cc_uno)
         rng_c = random.Random(self.cc_dos)
 
+        # Generamos líneas de CSV manualmente
+        lineas = []
+        lineas.append("i,b,c")  # encabezado
+        esc_b = math.log10((self.cc_uno % 10000) + 10)
+        esc_c = math.log10((self.cc_dos % 10000) + 10)
+
+        for i in range(1, self.n + 1):
+            # Ruido uniforme para b en [-1,1]
+            ruido_b = (rng_b.random() * 2.0) - 1.0
+            # Aproximación a normal(0,1) con 12 uniformes - 6
+            ruido_c = sum(rng_c.random() for _ in range(12)) - 6.0
+
+            b = (i * 0.5) + ruido_b * esc_b
+            c = (math.sqrt(i)) + ruido_c * esc_c
+
+            # Guardamos con 6 decimales para legibilidad
+            lineas.append(f"{i},{b:.6f},{c:.6f}")
+
+        with open(self.ruta_out, "w", encoding="utf-8") as f:
+            f.write("\n".join(lineas))
+
+        # Verificación: archivo existe y tiene n filas + 1 (encabezado)
+        if not os.path.exists(self.ruta_out):
+            raise IOError("No se pudo crear el archivo de salida")
+
+        with open(self.ruta_out, "r", encoding="utf-8") as f:
+            total_lineas = sum(1 for _ in f)
+
+        if total_lineas != self.n + 1:
+            raise IOError("El archivo de salida no tiene la cantidad correcta de filas")
+
         return "ok"
 
     # 3) Leer datos_out, agregar etiqueta y graficar
@@ -75,8 +106,46 @@ class ProcesadorDatos:
         with open(self.ruta_out, "r", encoding="utf-8") as f:
             lineas = f.read().strip().splitlines()
 
-        if not lineas or not lineas[0].startswith("i,b,c"):
+        if not lineas or lineas[0].strip() != "i,b,c":
             raise ValueError("El archivo no tiene el encabezado esperado 'i,b,c'")
+
+        # Parseamos
+        i_vals = []
+        b_vals = []
+        c_vals = []
+        for linea in lineas[1:]:
+            partes = linea.split(",")
+            if len(partes) < 3:
+                continue
+            i_vals.append(int(partes[0]))
+            b_vals.append(float(partes[1]))
+            c_vals.append(float(partes[2]))
+
+        # Agregar etiqueta aleatoria y re-escribir archivo con nueva columna
+        rng_cat = random.Random((self.cc_uno or 0) ^ (self.cc_dos or 0))
+        etiquetas = [rng_cat.choice(self.categorias) for _ in i_vals]
+
+        # Re-escribir con la nueva columna
+        with open(self.ruta_out, "w", encoding="utf-8") as f:
+            f.write("i,b,c,etiqueta\n")
+            for i, b, c, e in zip(i_vals, b_vals, c_vals, etiquetas):
+                f.write(f"{i},{b:.6f},{c:.6f},{e}\n")
+
+        # Graficar líneas simples
+        plt.figure()
+        plt.plot(i_vals, b_vals, label="b")
+        plt.plot(i_vals, c_vals, label="c")
+        plt.xlabel("i")
+        plt.ylabel("valor")
+        plt.title("Series generadas b y c")
+        plt.legend()
+        plt.tight_layout()
+        plt.savefig(self.ruta_img, dpi=200)
+        plt.close()
+
+        if not os.path.exists(self.ruta_img) or os.path.getsize(self.ruta_img) == 0:
+            raise IOError("No se pudo generar la imagen")
+
         return "ok"
 
 
