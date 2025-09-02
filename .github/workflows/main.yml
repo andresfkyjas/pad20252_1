@@ -48,11 +48,12 @@ jobs:
           }
         shell: pwsh
 
-      - name: Step 8 - Auto-commit artifacts
+      - name: Step 8 - Auto-commit & push (git)
         if: success()
-        uses: stefanzweifel/git-auto-commit-action@v5
-        with:
-          commit_message: "CI: generate and validate datos_out.txt and grafico_out.jpg"
-          commit_user_name: "Andres Callejas [GitHub Actions]"
-          commit_user_email: "andres.callejas@iudigital.edu.co"
-          commit_author: "Andres Callejas <andres.callejas@iudigital.edu.co>"
+        run: |
+          git config user.name "Andres Callejas [GitHub Actions]"
+          git config user.email "andres.callejas@iudigital.edu.co"
+          git add datos_out.txt grafico_out.jpg
+          git commit -m "CI: generate and validate datos_out.txt and grafico_out.jpg" || echo "Nada que commitear"
+          git push origin "${{ github.ref_name }}"
+        shell: bash
