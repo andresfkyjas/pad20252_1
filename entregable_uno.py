@@ -26,7 +26,7 @@ class ProcesadorDatos:
         self.cc_dos = None
 
         # Categorías para el paso 3
-        self.categorias = ["anciano","anciana","mujer","hombre","niño","niña"]
+        self.categorias = ["perro","gato","caballo","gallina"]
 
     # 1) Leer archivo de entrada
     def leer_datos_entrada(self):
