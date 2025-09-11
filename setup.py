@@ -14,6 +14,7 @@ setup(
         "beautifulsoup4",
         "matplotlib",
         "kagglehub[pandas-datasets]>=0.3.8",
-        "seaborn"
+        "seaborn",
+        "pyarrow"
     ]
 )
